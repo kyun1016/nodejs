@@ -22,57 +22,70 @@ var app = http.createServer(function(request,response){
     if(pathname === '/')
     {
       if(title == undefined){
-            //if(err) throw err;
-            //템플릿을 활용해 문서를 처리하였다.
-            title = 'Welcome';
-            var description = 'Hello, Node.js';
-            var template = `
-            <!doctype html>
-            <html>
-            <head>
-              <title>WEB1 - ${title}</title>
-              <meta charset="utf-8">
-            </head>
-            <body>
-              <h1><a href="/">WEB</a></h1>
-              <ol>
-                <li><a href="/?id=HTML">HTML</a></li>
-                <li><a href="/?id=CSS">CSS</a></li>
-                <li><a href="/?id=JavaScript">JavaScript</a></li>
-              </ol>
-              <h2>${title}</h2>
-              <p>${description}</p>
-            </body>
-            </html>
-            `;
-            response.writeHead(200);
-            response.end(template);
+        title = 'Welcome';
+        var description = 'Hello, Node.js';
+        fs.readdir('./data',(err, fileList)=>{
+          console.log(fileList);
+
+          var list = '<ul>';
+          for(var i=0;i<fileList.length;i++){
+            list = list + `<li><a href="/?id=${fileList[i]}">${fileList[i]}</a></li>`;
+          }
+
+          list = list + '</ul>';
+
+          var template = `
+          <!doctype html>
+          <html>
+          <head>
+            <title>WEB1 - ${title}</title>
+            <meta charset="utf-8">
+          </head>
+          <body>
+            <h1><a href="/">WEB</a></h1>
+            ${list}
+            <h2>${title}</h2>
+            <p>${description}</p>
+          </body>
+          </html>
+          `;
+          response.writeHead(200);
+          response.end(template);
+        });
+
     } else
       {
         fs.readFile(`data/${title}`, 'utf8', (err, description) => {
             //if(err) throw err;
             //템플릿을 활용해 문서를 처리하였다.
-            var template = `
-            <!doctype html>
-            <html>
-            <head>
-              <title>WEB1 - ${title}</title>
-              <meta charset="utf-8">
-            </head>
-            <body>
-              <h1><a href="/">WEB</a></h1>
-              <ol>
-                <li><a href="/?id=HTML">HTML</a></li>
-                <li><a href="/?id=CSS">CSS</a></li>
-                <li><a href="/?id=JavaScript">JavaScript</a></li>
-              </ol>
-              <h2>${title}</h2>
-              <p>${description}</p>
-            </body>
-            </html>
-            `;
-            response.writeHead(200);
-            response.end(template);
+            fs.readdir('./data',(err, fileList)=>{
+              console.log(fileList);
+
+              var list = '<ul>';
+              for(var i=0;i<fileList.length;i++){
+                list = list + `<li><a href="/?id=${fileList[i]}">${fileList[i]}</a></li>`;
+              }
+
+              list = list + '</ul>';
+
+              var template = `
+              <!doctype html>
+              <html>
+              <head>
+                <title>WEB1 - ${title}</title>
+                <meta charset="utf-8">
+              </head>
+              <body>
+                <h1><a href="/">WEB</a></h1>
+                ${list}
+                <h2>${title}</h2>
+                <p>${description}</p>
+              </body>
+              </html>
+              `;
+              response.writeHead(200);
+              response.end(template);
+            });
       })
     }
   } else {
